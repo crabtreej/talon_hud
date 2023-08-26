@@ -310,14 +310,14 @@ mod = Module()
 @mod.action_class
 class Actions:
 
-    def hud_create_virtual_key(action: Union[str, Callable], text: str = '', icon: str = '', colour: str = '', text_colour: str = '', x: int = 0, y: int = 0, width: int = -1, height: int = -1 ) -> dict:
+    def hud_create_virtual_key(action: Union[str, Callable], text: str = '', icon: str = '', colour: str = '', text_colour: str = '', x: int = 0, y: int = 0, width: int = -1, height: int = -1, action_args: dict = None) -> dict:
         """Create a virtual key to be used in a dwell toolbar or a virtual keyboard"""
         # Make sure something is visible if no text is given
         if text == '' and icon == '':
            text = '  '
            
         # If the action is a string, we default to it being a keypress
-        callback = action
+        callback = action if action_args is None else (lambda callback_args: action(**callback_args, **action_args))
         if isinstance(action, str):
             callback = lambda action=action: actions.key(action)
         

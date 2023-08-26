@@ -109,7 +109,7 @@ class VirtualKeyboardPoller:
             self.content.publish_event("screen_regions", "virtual_keyboard", "replace", screen_regions)
             self.keyboard_items = keyboard_items            
 
-    def activate_key(self):
+    def activate_key(self, callback_args):
         pos = ctrl.mouse_pos()
         
         key_index = -1
@@ -120,7 +120,10 @@ class VirtualKeyboardPoller:
     
         keyboard_item = self.keyboard_items[key_index] if key_index > -1 and key_index < len(self.keyboard_items) else None
         if keyboard_item is not None:
-            keyboard_item["callback"]()
+            if callback_args is not None:
+                keyboard_item["callback"](callback_args)
+            else:
+                keyboard_item["callback"]()
 
     def set_visibility(self, visible: bool):
         if self.current_keyboard is not None and self.current_keyboard in self.keyboards:
@@ -151,10 +154,10 @@ class Actions:
         global virtual_keyboard_poller
         virtual_keyboard_poller.add_keyboard(name, virtual_keys, layout_style, alignment, horizontal_key_amount, vertical_key_amount)
 
-    def hud_activate_virtual_key():
+    def hud_activate_virtual_key(callback_args: dict = None):
         """Activate a virtual keyboard key manually"""
         global virtual_keyboard_poller
-        virtual_keyboard_poller.activate_key()
+        virtual_keyboard_poller.activate_key(callback_args)
 
     def hud_set_virtual_keyboard_visibility(visible: Union[bool, int] = True):
         """Set the visibility of the current dwell toolbar"""
