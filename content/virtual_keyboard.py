@@ -29,7 +29,7 @@ class VirtualKeyboardPoller:
         }
         
         if self.enabled and id == self.current_keyboard:
-            self.update_keyboard()        
+            self.update_keyboard()
 
     def enable(self):
         if not self.enabled:
@@ -111,19 +111,15 @@ class VirtualKeyboardPoller:
 
     def activate_key(self, callback_args):
         pos = ctrl.mouse_pos()
-        
-        key_index = -1
         for index, keyboard_item in enumerate(self.keyboard_items):
             if in_region(pos, keyboard_item["rect"].x, keyboard_item["rect"].y, keyboard_item["rect"].width, keyboard_item["rect"].height):
                 key_index = index
-                break
-    
-        keyboard_item = self.keyboard_items[key_index] if key_index > -1 and key_index < len(self.keyboard_items) else None
-        if keyboard_item is not None:
-            if callback_args is not None:
-                keyboard_item["callback"](callback_args)
-            else:
-                keyboard_item["callback"]()
+                keyboard_item = self.keyboard_items[index] 
+                if keyboard_item is not None:
+                    if callback_args is not None:
+                        keyboard_item["callback"](callback_args)
+                    else:
+                        keyboard_item["callback"]()
 
     def set_visibility(self, visible: bool):
         if self.current_keyboard is not None and self.current_keyboard in self.keyboards:
@@ -139,7 +135,6 @@ app.register('ready', register_virtual_keyboard_poller)
 mod = Module()
 @mod.action_class
 class Actions:
-
     def hud_set_virtual_keyboard(name: str = None, monitor: int = 0, visible: Union[bool, int] = True):
         """Show the virtual keyboard screen regions"""
         global virtual_keyboard_poller
