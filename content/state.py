@@ -54,7 +54,12 @@ class HeadUpDisplayContent(Dispatch):
         if not topic_type in self.topic_types:
             self.topic_types[topic_type] = {}
         self.topic_types[topic_type][panel_content.topic] = panel_content
-        self.dispatch("broadcast_update", HudContentEvent(topic_type, panel_content.topic, panel_content, "replace", CLAIM_WIDGET_TOPIC_TYPE, panel_content.show ))
+
+        operation = "replace"
+        if not (panel_content.title and panel_content.content):
+            operation = "remove"
+
+        self.dispatch("broadcast_update", HudContentEvent(topic_type, panel_content.topic, panel_content, operation, CLAIM_WIDGET_TOPIC_TYPE, panel_content.show ))
     
     # Publish content directly through the event system
     def publish_event(self, topic_type, topic, data, operation, show = False, claim = 0):
