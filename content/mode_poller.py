@@ -64,7 +64,6 @@ class PartialModePoller(Poller):
             self.content.publish_event("variable", "mode", "replace", current_mode)
 
     def publish_statusbar_icon(self, current_mode):
-        print(current_mode)
         status_icon = self.content.create_status_icon("mode_toggle", current_mode + "_icon", None, current_mode + " mode", lambda _, _2: actions.user.hud_toggle_mode())
         self.content.publish_event("status_icons", status_icon.topic, "replace", status_icon)
 
@@ -98,7 +97,7 @@ class Actions:
 
     def hud_get_status_modes() -> list[str]:
         """Get an ordered list of all the available modes that can be displayed in the status bar and other widget states"""
-        return ["user.warcraft", "user.warcraftmenus", "user.discordwow", "user.discordbaldur", "user.baldur", "dictation", "command", "sleep"]
+        return ["user.warcraft", "user.warcraftmenus", "user.discord", "user.discordbaldur", "user.baldur", "dictation", "command", "sleep"]
 
     def hud_determine_mode() -> str:
         """Determine the current mode used for the status bar icons and the widget states"""
